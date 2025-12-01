@@ -39,4 +39,5 @@ docker run -d \
   jupyter-server
 
 echo "Deployment complete! You can now access the server at http://$REMOTE_HOST:8888"
-echo "To view logs/token: docker logs jupyter-server (commands now run against remote by default due to export)"
+echo "Here is jupyter's token:"
+./get_token.sh
