@@ -34,8 +34,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 
 # Setup workspace and permissions
-WORKDIR /workspace
-RUN chown $USERNAME:$USERNAME /workspace
+WORKDIR /ephemeral
+RUN chown $USERNAME:$USERNAME /ephemeral
 
 USER $USERNAME
 

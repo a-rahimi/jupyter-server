@@ -56,7 +56,23 @@ What the script does:
 
     Paste the token from the logs when prompted.
 
-## Manual Management
+## Storage
+
+The container provides two main storage locations:
+
+### `/ephemeral` (Temporary)
+-   **Type**: `tmpfs` (RAM-backed).
+-   **Persistence**: **CLEARED** when the container stops or restarts.
+-   **Use Case**: High-speed I/O, temporary data, intermediate processing steps.
+-   **Note**: This is the fastest storage available but data is volatile.
+
+### `/permanent` (Persistent)
+-   **Type**: Bind mount to the host machine.
+-   **Persistence**: Persists across container restarts.
+-   **Use Case**: Jupyter notebooks, source code, final results/models.
+-   **Note**: Use this only when necessary for files that must be saved.
+
+ ## Manual Management
 
 You can manage the remote container from your local machine by setting `DOCKER_HOST`:
 
@@ -74,4 +90,16 @@ docker start jupyter-server
 
 # Remove
 docker rm jupyter-server
+
+# Copy files to the permanent storage
+docker cp /path/to/local/file jupyter-server:/permanent
+
+# Copy files to the ephemeral storage (tmpfs)
+# Note: 'docker cp' DOES NOT work with tmpfs.
+
+# Method 1: Tar (Best for directories or preserving attributes)
+tar -c -f - /path/to/local/file | docker exec -i jupyter-server tar -x -f - -C /ephemeral
+
+# Method 2: Cat (Best for single files)
+cat /path/to/local/file | docker exec -i jupyter-server sh -c "cat > /ephemeral/filename"
 ```

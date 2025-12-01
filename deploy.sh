@@ -34,7 +34,8 @@ echo "Starting new container..."
 docker run -d \
   --restart unless-stopped \
   -p 8888:8888 \
-  -v "$REMOTE_HOME/jupyter_work:/workspace" \
+  -v "$REMOTE_HOME/jupyter_work:/permanent" \
+  --tmpfs /ephemeral:rw,uid=1000,gid=1000 \
   --name jupyter-server \
   jupyter-server
 
