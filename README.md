@@ -1,8 +1,8 @@
 # Dockerized Jupyter Server for server.local
 
-This project builds a Data Science ready Jupyter server (including PyTorch,
-Pandas, SciPy, ffmpeg) and deploy it directly to a remote machine
-(`server.local`) via SSH.
+This Docker is a data science-ready Jupyter server (including PyTorch, Pandas,
+SciPy, ffmpeg). It deploys directly to a remote machine (`server.local`) via
+SSH.
 
 ## Files
 
@@ -18,7 +18,7 @@ Pandas, SciPy, ffmpeg) and deploy it directly to a remote machine
 
 ## Configuration
 
-Open `deploy.sh` and set your remote host information if different from defaults:
+Edit `deploy.sh` with your remote host information:
 
 ```bash
 REMOTE_HOST="server.local"
@@ -39,6 +39,7 @@ What the script does:
 3.  Builds the image *on the remote machine*.
 4.  Stops and removes any old `jupyter-server` container on the remote machine.
 5.  Starts the new container on the remote machine (configured to auto-restart on reboot unless manually stopped).
+6.  Prints a token to access the jupyter server.
 
 
 ## Accessing Jupyter
@@ -48,11 +49,10 @@ What the script does:
     ```bash
     ./get_token.sh
     ```
-    It will output the login token.
+    It will print the login token.
 
 2.  **Connect**:
-    Open your browser and go to:
-    `http://server.local:8888`
+    Open the browser on the local machine and visit `http://server.local:8888`.
 
     Paste the token from the logs when prompted.
 
@@ -60,17 +60,8 @@ What the script does:
 
 The container provides two main storage locations:
 
-### `/ephemeral` (Temporary)
--   **Type**: `tmpfs` (RAM-backed).
--   **Persistence**: **CLEARED** when the container stops or restarts.
--   **Use Case**: High-speed I/O, temporary data, intermediate processing steps.
--   **Note**: This is the fastest storage available but data is volatile.
-
-### `/permanent` (Persistent)
--   **Type**: Bind mount to the host machine.
--   **Persistence**: Persists across container restarts.
--   **Use Case**: Jupyter notebooks, source code, final results/models.
--   **Note**: Use this only when necessary for files that must be saved.
+* `/ephemeral` (Temporary): **CLEARED** when the container stops or restarts.
+* `/permanent` (Persistent): Persists across container restarts.
 
  ## Manual Management
 
